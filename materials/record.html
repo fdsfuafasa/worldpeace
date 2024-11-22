@@ -9,11 +9,16 @@
   <h1>日语单词记录</h1>
   <!-- 返回主页按钮 -->
   <button onclick="goToHome()">返回目录主页</button>
+  
   <div>
     <label for="new-word">添加新单词：</label>
     <input type="text" id="new-word" placeholder="输入单词">
     <button onclick="addWord()">添加单词</button>
   </div>
+
+  <!-- 显示加载中的消息 -->
+  <div id="loading-message" style="display: none;">单词正在加载中...</div>
+
   <h2>单词列表：</h2>
   <ul id="word-list"></ul>
 
@@ -45,6 +50,11 @@
     // 加载单词列表
     const loadWords = () => {
       const wordList = document.getElementById("word-list");
+      const loadingMessage = document.getElementById("loading-message");
+      
+      // 显示加载中的消息
+      loadingMessage.style.display = "block";
+
       wordList.innerHTML = ""; // 清空列表
 
       database.ref("words").once("value", (snapshot) => {
@@ -69,8 +79,12 @@
         } else {
           wordList.innerHTML = "<li>没有记录的单词。</li>";
         }
+
+        // 隐藏加载中的消息
+        loadingMessage.style.display = "none";
       }).catch((error) => {
         console.error("读取单词失败：", error);
+        loadingMessage.style.display = "none"; // 如果出现错误，也隐藏加载中的消息
       });
     };
 
