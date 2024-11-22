@@ -1,0 +1,9 @@
+const firebaseConfig = {
+    apiKey: "AIzaSyC0aCh6FQ2so1JyoFG_RHiMPlFDK4Jz_ZE",
+    authDomain: "japanesestudytracker.firebaseapp.com",
+    databaseURL: "https://japanesestudytracker-default-rtdb.firebaseio.com",
+    projectId: "japanesestudytracker",
+    storageBucket: "japanesestudytracker.firebasestorage.app",
+    messagingSenderId: "646825226387",
+    appId: "1:646825226387:web:f3fa4802ea63eeca6cdd66"
+};
