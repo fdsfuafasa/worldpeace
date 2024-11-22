@@ -3,18 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>日语词汇记录</title>
-  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-database-compat.js"></script>
+  <title>日语单词记录</title>
 </head>
 <body>
-  <h1>日语词汇记录</h1>
-  <input type="text" id="new-word" placeholder="输入新单词">
-  <button onclick="addWord()">添加单词</button>
+  <h1>日语单词记录</h1>
+  <div>
+    <label for="new-word">添加新单词：</label>
+    <input type="text" id="new-word" placeholder="输入单词">
+    <button onclick="addWord()">添加单词</button>
+  </div>
+  <h2>单词列表：</h2>
   <ul id="word-list"></ul>
 
+  <!-- Firebase App -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+
   <script>
-    // Firebase 配置
+    // Firebase 配置（替换为你的 Firebase 配置）
     const firebaseConfig = {
         apiKey: "AIzaSyC0aCh6FQ2so1JyoFG_RHiMPlFDK4Jz_ZE",
         authDomain: "japanesestudytracker.firebaseapp.com",
@@ -29,7 +35,29 @@
     const app = firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // 添加单词函数
+    // 加载单词列表
+    const loadWords = () => {
+      const wordList = document.getElementById("word-list");
+      wordList.innerHTML = ""; // 清空列表
+
+      database.ref("words").once("value", (snapshot) => {
+        const words = snapshot.val();
+        if (words) {
+          Object.keys(words).forEach((key) => {
+            const word = words[key];
+            const li = document.createElement("li");
+            li.textContent = word;
+            wordList.appendChild(li);
+          });
+        } else {
+          wordList.innerHTML = "<li>没有记录的单词。</li>";
+        }
+      }).catch((error) => {
+        console.error("读取单词失败：", error);
+      });
+    };
+
+    // 添加单词
     const addWord = () => {
       const newWord = document.getElementById("new-word").value.trim();
       if (!newWord) {
@@ -37,34 +65,20 @@
         return;
       }
 
-      // 生成唯一键值
+      // 写入到 "words" 节点
       const newKey = database.ref("words").push().key;
       database.ref("words/" + newKey).set(newWord)
         .then(() => {
           alert("单词添加成功！");
-          loadWords();
+          loadWords(); // 重新加载单词列表
+          document.getElementById("new-word").value = ""; // 清空输入框
         })
         .catch((error) => {
           console.error("添加单词失败：", error);
         });
     };
 
-    // 加载单词列表
-    const loadWords = () => {
-      const wordList = document.getElementById("word-list");
-      wordList.innerHTML = ""; // 清空列表
-
-      database.ref("words").once("value", (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-          const word = childSnapshot.val();
-          const li = document.createElement("li");
-          li.textContent = word;
-          wordList.appendChild(li);
-        });
-      });
-    };
-
-    // 页面加载时初始化单词列表
+    // 页面加载时调用
     window.onload = loadWords;
   </script>
 </body>
