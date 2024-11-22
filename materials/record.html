@@ -7,6 +7,8 @@
 </head>
 <body>
   <h1>日语单词记录</h1>
+  <!-- 返回主页按钮 -->
+  <button onclick="goToHome()">返回目录主页</button>
   <div>
     <label for="new-word">添加新单词：</label>
     <input type="text" id="new-word" placeholder="输入单词">
@@ -35,6 +37,11 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
+    // 返回目录主页
+    const goToHome = () => {
+      window.location.href = "index.html"; // 修改为你的主页文件路径
+    };
+
     // 加载单词列表
     const loadWords = () => {
       const wordList = document.getElementById("word-list");
@@ -45,8 +52,18 @@
         if (words) {
           Object.keys(words).forEach((key) => {
             const word = words[key];
+
+            // 创建列表项
             const li = document.createElement("li");
             li.textContent = word;
+
+            // 创建删除按钮
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "删除";
+            deleteButton.style.marginLeft = "10px";
+            deleteButton.onclick = () => deleteWord(key);
+
+            li.appendChild(deleteButton); // 添加删除按钮到列表项
             wordList.appendChild(li);
           });
         } else {
@@ -75,6 +92,20 @@
         .catch((error) => {
           console.error("添加单词失败：", error);
         });
+    };
+
+    // 删除单词
+    const deleteWord = (key) => {
+      if (confirm("确定要删除该单词吗？")) {
+        database.ref("words/" + key).remove()
+          .then(() => {
+            alert("单词删除成功！");
+            loadWords(); // 刷新单词列表
+          })
+          .catch((error) => {
+            console.error("删除单词失败：", error);
+          });
+      }
     };
 
     // 页面加载时调用
