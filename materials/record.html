@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日语学习记录</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        button { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>日语学习记录</h1>
+    <input id="new-word" type="text" placeholder="输入新单词">
+    <button onclick="addWord()">添加单词</button>
+    <table>
+        <thead>
+            <tr>
+                <th>单词</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="word-list"></tbody>
+    </table>
+    <script>
+        // 从 localStorage 加载单词列表
+        const loadWords = () => {
+            const words = JSON.parse(localStorage.getItem("words")) || [];
+            const wordList = document.getElementById("word-list");
+            wordList.innerHTML = words.map((word, index) => `
+                <tr>
+                    <td>${word}</td>
+                    <td>
+                        <button onclick="deleteWord(${index})">删除</button>
+                    </td>
+                </tr>
+            `).join("");
+        };
+
+        // 添加单词
+        const addWord = () => {
+            const newWord = document.getElementById("new-word").value.trim();
+            if (!newWord) return alert("请输入单词！");
+            const words = JSON.parse(localStorage.getItem("words")) || [];
+            words.push(newWord);
+            localStorage.setItem("words", JSON.stringify(words));
+            document.getElementById("new-word").value = "";
+            loadWords();
+        };
+
+        // 删除单词
+        const deleteWord = (index) => {
+            const words = JSON.parse(localStorage.getItem("words")) || [];
+            words.splice(index, 1);
+            localStorage.setItem("words", JSON.stringify(words));
+            loadWords();
+        };
+
+        // 页面加载时初始化
+        window.onload = loadWords;
+    </script>
+</body>
+</html>
