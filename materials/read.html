@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日语假名记忆强化</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 50%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>日语假名记忆强化</h1>
+
+  <!-- 假名表格 -->
+  <table id="kana-table">
+    <thead>
+      <tr>
+        <th>假名</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>点击按钮生成假名</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 按钮容器 -->
+  <div id="btn-container">
+    <!-- 重新生成按钮 -->
+    <button onclick="generateKana()">生成假名</button>
+    <!-- 返回主页按钮 -->
+    <button onclick="goToHome()">返回主页</button>
+  </div>
+
+  <script>
+    // 日语假名数组（包含清音、浊音、拗音）
+    const kanaArray = [
+      "あ", "い", "う", "え", "お",
+      "か", "き", "く", "け", "こ",
+      "さ", "し", "す", "せ", "そ",
+      "た", "ち", "つ", "て", "と",
+      "な", "に", "ぬ", "ね", "の",
+      "は", "ひ", "ふ", "へ", "ほ",
+      "ま", "み", "む", "め", "も",
+      "や", "ゆ", "よ",
+      "ら", "り", "る", "れ", "ろ",
+      "わ", "を", "ん",
+      "が", "ぎ", "ぐ", "げ", "ご",
+      "ざ", "じ", "ず", "ぜ", "ぞ",
+      "だ", "ぢ", "づ", "で", "ど",
+      "ば", "び", "ぶ", "べ", "ぼ",
+      "ぱ", "ぴ", "ぷ", "ぺ", "ぽ",
+      "きゃ", "きゅ", "きょ",
+      "しゃ", "しゅ", "しょ",
+      "ちゃ", "ちゅ", "ちょ",
+      "にゃ", "にゅ", "にょ",
+      "ひゃ", "ひゅ", "ひょ",
+      "みゃ", "みゅ", "みょ",
+      "りゃ", "りゅ", "りょ",
+      "ぎゃ", "ぎゅ", "ぎょ",
+      "じゃ", "じゅ", "じょ",
+      "びゃ", "びゅ", "びょ",
+      "ぴゃ", "ぴゅ", "ぴょ"
+    ];
+
+    // 返回主页
+    const goToHome = () => {
+      window.location.href = "../index.html"; // 修改为你的主页文件路径
+    };
+
+    // 随机生成X个假名并填充表格
+    const generateKana = (x = 10) => {
+      const shuffledKana = kanaArray.sort(() => 0.5 - Math.random()); // 随机排序
+      const selectedKana = shuffledKana.slice(0, x); // 选取前X个假名
+
+      const tableBody = document.getElementById("kana-table").querySelector("tbody");
+      tableBody.innerHTML = ""; // 清空表格内容
+
+      selectedKana.forEach((kana) => {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.textContent = kana;
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+      });
+    };
+  </script>
+</body>
+</html>
