@@ -5,109 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>日语假名记忆强化</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 20px;
-    }
-
-    table {
-      margin: 20px auto;
-      border-collapse: collapse;
-      width: 60%;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-
-    button {
-      padding: 5px 10px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    #btn-container {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
+    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+    table { margin: 20px auto; border-collapse: collapse; width: 60%; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+    button { padding: 5px 10px; font-size: 14px; cursor: pointer; }
+    #btn-container { display: flex; justify-content: center; gap: 20px; }
   </style>
 </head>
 <body>
   <h1>日语假名记忆强化</h1>
-
-  <!-- 假名表格 -->
   <table id="kana-table">
     <thead>
-      <tr>
-        <th>假名</th>
-        <th>操作</th>
-        <th>罗马音</th>
-      </tr>
+      <tr><th>假名</th><th>操作</th><th>罗马音</th></tr>
     </thead>
-    <tbody>
-      <tr><td colspan="3">点击按钮生成假名</td></tr>
-    </tbody>
+    <tbody><tr><td colspan="3">点击按钮生成假名</td></tr></tbody>
   </table>
-
-  <!-- 按钮容器 -->
   <div id="btn-container">
-    <!-- 重新生成按钮 -->
     <button onclick="generateKana()">生成假名</button>
-    <!-- 返回主页按钮 -->
     <button onclick="goToHome()">返回主页</button>
   </div>
-
-  <script src="./dictionary.js"></script> <!-- 引入假名字典 -->
+  <script src="./dictionary.js"></script>
   <script>
-    // 返回主页
-    const goToHome = () => {
-      window.location.href = "../index.html"; // 修改为你的主页文件路径
-    };
-
-    // 随机生成X个假名并填充表格
+    const goToHome = () => { window.location.href = "../index.html"; };
     const generateKana = (x = 10) => {
-      // 获取所有分组的假名
+      if (typeof kanaDictionary === "undefined") {
+        alert("字典数据未加载，请检查 dictionary.js 文件！");
+        return;
+      }
+
       const allKana = [];
       for (const group in kanaDictionary) {
-        const kanaGroup = kanaDictionary[group];
-        for (const kana in kanaGroup) {
-          allKana.push({ kana, romaji: kanaGroup[kana] });
+        for (const kana in kanaDictionary[group]) {
+          allKana.push({ kana, romaji: kanaDictionary[group][kana] });
         }
       }
 
-      // 随机选择X个假名
       const shuffledKana = allKana.sort(() => 0.5 - Math.random());
       const selectedKana = shuffledKana.slice(0, x);
 
-      // 更新表格内容
       const tableBody = document.getElementById("kana-table").querySelector("tbody");
       tableBody.innerHTML = ""; // 清空表格内容
 
       selectedKana.forEach(({ kana, romaji }) => {
         const row = document.createElement("tr");
 
-        // 假名单元格
         const kanaCell = document.createElement("td");
         kanaCell.textContent = kana;
 
-        // 按钮单元格
         const buttonCell = document.createElement("td");
         const button = document.createElement("button");
         button.textContent = "查看罗马音";
         button.onclick = () => {
-          // 显示罗马音
           romajiCell.textContent = romaji || "未知";
-          button.disabled = true; // 禁用按钮防止重复点击
+          button.disabled = true;
         };
         buttonCell.appendChild(button);
 
-        // 罗马音单元格
         const romajiCell = document.createElement("td");
-        romajiCell.textContent = ""; // 初始为空
+        romajiCell.textContent = "";
 
         row.appendChild(kanaCell);
         row.appendChild(buttonCell);
