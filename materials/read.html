@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="jp">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,9 +24,8 @@
     }
 
     button {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 16px;
+      padding: 5px 10px;
+      font-size: 14px;
       cursor: pointer;
     }
 
@@ -45,10 +44,11 @@
     <thead>
       <tr>
         <th>假名</th>
+        <th>操作</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td>点击按钮生成假名</td></tr>
+      <tr><td colspan="2">点击按钮生成假名</td></tr>
     </tbody>
   </table>
 
@@ -61,38 +61,60 @@
   </div>
 
   <script>
-    // 日语假名数组（包含平假名和片假名的清音、浊音、拗音）
-    const kanaArray = [
-      // 清音（平假名 + 片假名）
-      "あ", "い", "う", "え", "お", "ア", "イ", "ウ", "エ", "オ",
-      "か", "き", "く", "け", "こ", "カ", "キ", "ク", "ケ", "コ",
-      "さ", "し", "す", "せ", "そ", "サ", "シ", "ス", "セ", "ソ",
-      "た", "ち", "つ", "て", "と", "タ", "チ", "ツ", "テ", "ト",
-      "な", "に", "ぬ", "ね", "の", "ナ", "ニ", "ヌ", "ネ", "ノ",
-      "は", "ひ", "ふ", "へ", "ほ", "ハ", "ヒ", "フ", "ヘ", "ホ",
-      "ま", "み", "む", "め", "も", "マ", "ミ", "ム", "メ", "モ",
-      "や", "ゆ", "よ", "ヤ", "ユ", "ヨ",
-      "ら", "り", "る", "れ", "ろ", "ラ", "リ", "ル", "レ", "ロ",
-      "わ", "を", "ん", "ワ", "ヲ", "ン",
-      // 浊音（平假名 + 片假名）
-      "が", "ぎ", "ぐ", "げ", "ご", "ガ", "ギ", "グ", "ゲ", "ゴ",
-      "ざ", "じ", "ず", "ぜ", "ぞ", "ザ", "ジ", "ズ", "ゼ", "ゾ",
-      "だ", "ぢ", "づ", "で", "ど", "ダ", "ヂ", "ヅ", "デ", "ド",
-      "ば", "び", "ぶ", "べ", "ぼ", "バ", "ビ", "ブ", "ベ", "ボ",
-      "ぱ", "ぴ", "ぷ", "ぺ", "ぽ", "パ", "ピ", "プ", "ペ", "ポ",
-      // 拗音（平假名 + 片假名）
-      "きゃ", "きゅ", "きょ", "キャ", "キュ", "キョ",
-      "しゃ", "しゅ", "しょ", "シャ", "シュ", "ショ",
-      "ちゃ", "ちゅ", "ちょ", "チャ", "チュ", "チョ",
-      "にゃ", "にゅ", "にょ", "ニャ", "ニュ", "ニョ",
-      "ひゃ", "ひゅ", "ひょ", "ヒャ", "ヒュ", "ヒョ",
-      "みゃ", "みゅ", "みょ", "ミャ", "ミュ", "ミョ",
-      "りゃ", "りゅ", "りょ", "リャ", "リュ", "リョ",
-      "ぎゃ", "ぎゅ", "ぎょ", "ギャ", "ギュ", "ギョ",
-      "じゃ", "じゅ", "じょ", "ジャ", "ジュ", "ジョ",
-      "びゃ", "びゅ", "びょ", "ビャ", "ビュ", "ビョ",
-      "ぴゃ", "ぴゅ", "ぴょ", "ピャ", "ピュ", "ピョ"
-    ];
+    // 日语假名与罗马音对应表
+    const kanaToRomaji = {
+      "あ": "a", "い": "i", "う": "u", "え": "e", "お": "o",
+      "ア": "a", "イ": "i", "ウ": "u", "エ": "e", "オ": "o",
+      "か": "ka", "き": "ki", "く": "ku", "け": "ke", "こ": "ko",
+      "カ": "ka", "キ": "ki", "ク": "ku", "ケ": "ke", "コ": "ko",
+      "さ": "sa", "し": "shi", "す": "su", "せ": "se", "そ": "so",
+      "サ": "sa", "シ": "shi", "ス": "su", "セ": "se", "ソ": "so",
+      "た": "ta", "ち": "chi", "つ": "tsu", "て": "te", "と": "to",
+      "タ": "ta", "チ": "chi", "ツ": "tsu", "テ": "te", "ト": "to",
+      "な": "na", "に": "ni", "ぬ": "nu", "ね": "ne", "の": "no",
+      "ナ": "na", "ニ": "ni", "ヌ": "nu", "ネ": "ne", "ノ": "no",
+      "は": "ha", "ひ": "hi", "ふ": "fu", "へ": "he", "ほ": "ho",
+      "ハ": "ha", "ヒ": "hi", "フ": "fu", "ヘ": "he", "ホ": "ho",
+      "ま": "ma", "み": "mi", "む": "mu", "め": "me", "も": "mo",
+      "マ": "ma", "ミ": "mi", "ム": "mu", "メ": "me", "モ": "mo",
+      "や": "ya", "ゆ": "yu", "よ": "yo", "ヤ": "ya", "ユ": "yu", "ヨ": "yo",
+      "ら": "ra", "り": "ri", "る": "ru", "れ": "re", "ろ": "ro",
+      "ラ": "ra", "リ": "ri", "ル": "ru", "レ": "re", "ロ": "ro",
+      "わ": "wa", "を": "wo", "ん": "n",
+      "ワ": "wa", "ヲ": "wo", "ン": "n",
+      "が": "ga", "ぎ": "gi", "ぐ": "gu", "げ": "ge", "ご": "go",
+      "ガ": "ga", "ギ": "gi", "グ": "gu", "ゲ": "ge", "ゴ": "go",
+      "ざ": "za", "じ": "ji", "ず": "zu", "ぜ": "ze", "ぞ": "zo",
+      "ザ": "za", "ジ": "ji", "ズ": "zu", "ゼ": "ze", "ゾ": "zo",
+      "だ": "da", "ぢ": "ji", "づ": "zu", "で": "de", "ど": "do",
+      "ダ": "da", "ヂ": "ji", "ヅ": "zu", "デ": "de", "ド": "do",
+      "ば": "ba", "び": "bi", "ぶ": "bu", "べ": "be", "ぼ": "bo",
+      "バ": "ba", "ビ": "bi", "ブ": "bu", "ベ": "be", "ボ": "bo",
+      "ぱ": "pa", "ぴ": "pi", "ぷ": "pu", "ぺ": "pe", "ぽ": "po",
+      "パ": "pa", "ピ": "pi", "プ": "pu", "ペ": "pe", "ポ": "po",
+      "きゃ": "kya", "きゅ": "kyu", "きょ": "kyo",
+      "キャ": "kya", "キュ": "kyu", "キョ": "kyo",
+      "しゃ": "sha", "しゅ": "shu", "しょ": "sho",
+      "シャ": "sha", "シュ": "shu", "ショ": "sho",
+      "ちゃ": "cha", "ちゅ": "chu", "ちょ": "cho",
+      "チャ": "cha", "チュ": "chu", "チョ": "cho",
+      "にゃ": "nya", "にゅ": "nyu", "にょ": "nyo",
+      "ニャ": "nya", "ニュ": "nyu", "ニョ": "nyo",
+      "ひゃ": "hya", "ひゅ": "hyu", "ひょ": "hyo",
+      "ヒャ": "hya", "ヒュ": "hyu", "ヒョ": "hyo",
+      "みゃ": "mya", "みゅ": "myu", "みょ": "myo",
+      "ミャ": "mya", "ミュ": "myu", "ミョ": "myo",
+      "りゃ": "rya", "りゅ": "ryu", "りょ": "ryo",
+      "リャ": "rya", "リュ": "ryu", "リョ": "ryo",
+      "ぎゃ": "gya", "ぎゅ": "gyu", "ぎょ": "gyo",
+      "ギャ": "gya", "ギュ": "gyu", "ギョ": "gyo",
+      "じゃ": "ja", "じゅ": "ju", "じょ": "jo",
+      "ジャ": "ja", "ジュ": "ju", "ジョ": "jo",
+      "びゃ": "bya", "びゅ": "byu", "びょ": "byo",
+      "ビャ": "bya", "ビュ": "byu", "ビョ": "byo",
+      "ぴゃ": "pya", "ぴゅ": "pyu", "ぴょ": "pyo",
+      "ピャ": "pya", "ピュ": "pyu", "ピョ": "pyo"
+    };
 
     // 返回主页
     const goToHome = () => {
@@ -101,7 +123,7 @@
 
     // 随机生成X个假名并填充表格
     const generateKana = (x = 10) => {
-      const shuffledKana = kanaArray.sort(() => 0.5 - Math.random()); // 随机排序
+      const shuffledKana = Object.keys(kanaToRomaji).sort(() => 0.5 - Math.random()); // 随机排序
       const selectedKana = shuffledKana.slice(0, x); // 选取前X个假名
 
       const tableBody = document.getElementById("kana-table").querySelector("tbody");
@@ -109,9 +131,20 @@
 
       selectedKana.forEach((kana) => {
         const row = document.createElement("tr");
-        const cell = document.createElement("td");
-        cell.textContent = kana;
-        row.appendChild(cell);
+
+        // 假名单元格
+        const kanaCell = document.createElement("td");
+        kanaCell.textContent = kana;
+
+        // 按钮单元格
+        const buttonCell = document.createElement("td");
+        const button = document.createElement("button");
+        button.textContent = "查看罗马音";
+        button.onclick = () => alert(`罗马音: ${kanaToRomaji[kana]}`);
+        buttonCell.appendChild(button);
+
+        row.appendChild(kanaCell);
+        row.appendChild(buttonCell);
         tableBody.appendChild(row);
       });
     };
