@@ -70,13 +70,24 @@
 
     // 随机生成X个假名并填充表格
     const generateKana = (x = 10) => {
-      const shuffledKana = Object.keys(kanaToRomaji).sort(() => 0.5 - Math.random()); // 随机排序
-      const selectedKana = shuffledKana.slice(0, x); // 选取前X个假名
+      // 获取所有分组的假名
+      const allKana = [];
+      for (const group in kanaDictionary) {
+        const kanaGroup = kanaDictionary[group];
+        for (const kana in kanaGroup) {
+          allKana.push({ kana, romaji: kanaGroup[kana] });
+        }
+      }
 
+      // 随机选择X个假名
+      const shuffledKana = allKana.sort(() => 0.5 - Math.random());
+      const selectedKana = shuffledKana.slice(0, x);
+
+      // 更新表格内容
       const tableBody = document.getElementById("kana-table").querySelector("tbody");
       tableBody.innerHTML = ""; // 清空表格内容
 
-      selectedKana.forEach((kana) => {
+      selectedKana.forEach(({ kana, romaji }) => {
         const row = document.createElement("tr");
 
         // 假名单元格
@@ -89,7 +100,7 @@
         button.textContent = "查看罗马音";
         button.onclick = () => {
           // 显示罗马音
-          romajiCell.textContent = kanaToRomaji[kana] || "未知";
+          romajiCell.textContent = romaji || "未知";
           button.disabled = true; // 禁用按钮防止重复点击
         };
         buttonCell.appendChild(button);
