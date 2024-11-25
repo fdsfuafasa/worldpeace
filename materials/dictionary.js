@@ -1,4 +1,4 @@
-const dictionary = {
+const kanaDictionary = {
     seion: [
         ["-", "あ<br>ア", "い<br>イ", "う<br>ウ", "え<br>エ", "お<br>オ"],
         ["k", "か<br>カ", "き<br>キ", "く<br>ク", "け<br>ケ", "こ<br>コ"],
