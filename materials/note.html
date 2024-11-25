@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日语笔记</title>
+</head>
+<body>
+  <h1>我的日语笔记</h1>
+  <!-- 返回主页按钮 -->
+  <button onclick="goToHome()">返回主页</button>
+
+  <!-- 添加新笔记 -->
+  <div>
+    <h2>添加新笔记</h2>
+    <input type="text" id="note-title" placeholder="笔记标题">
+    <textarea id="note-content" placeholder="在这里输入笔记内容"></textarea>
+    <button onclick="addNote()">添加笔记</button>
+  </div>
+
+  <!-- 笔记列表 -->
+  <h2>笔记列表</h2>
+  <ul id="note-list">
+    <!-- 笔记项将动态加载到这里 -->
+  </ul>
+
+  <!-- Firebase 兼容模式脚本 -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    // Firebase 配置
+    const firebaseConfig = {
+        apiKey: "AIzaSyC0aCh6FQ2so1JyoFG_RHiMPlFDK4Jz_ZE",
+        authDomain: "japanesestudytracker.firebaseapp.com",
+        databaseURL: "https://japanesestudytracker-default-rtdb.firebaseio.com",
+        projectId: "japanesestudytracker",
+        storageBucket: "japanesestudytracker.firebasestorage.app",
+        messagingSenderId: "646825226387",
+        appId: "1:646825226387:web:f3fa4802ea63eeca6cdd66"
+    };
+
+    // 初始化 Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // 返回主页
+    const goToHome = () => {
+      window.location.href = "../index.html"; // 修改为你的主页路径
+    };
+
+    // 加载笔记列表
+    const loadNotes = () => {
+      const noteList = document.getElementById("note-list");
+      noteList.innerHTML = ""; // 清空列表
+
+      database.ref("notes").once("value", (snapshot) => {
+        const notes = snapshot.val();
+        if (notes) {
+          Object.keys(notes).forEach((key) => {
+            const note = notes[key];
+
+            // 创建笔记标题列表项
+            const li = document.createElement("li");
+            li.textContent = note.title;
+
+            // 点击标题查看内容
+            li.onclick = () => alert(note.content);
+
+            // 创建删除按钮
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "删除";
+            deleteButton.style.marginLeft = "10px";
+            deleteButton.onclick = (event) => {
+              event.stopPropagation(); // 防止触发 `li` 的点击事件
+              deleteNote(key);
+            };
+
+            li.appendChild(deleteButton);
+            noteList.appendChild(li);
+          });
+        } else {
+          noteList.innerHTML = "<li>没有记录的笔记。</li>";
+        }
+      }).catch((error) => {
+        console.error("加载笔记失败：", error);
+      });
+    };
+
+    // 添加新笔记
+    const addNote = () => {
+      const title = document.getElementById("note-title").value.trim();
+      const content = document.getElementById("note-content").value.trim();
+
+      if (!title || !content) {
+        alert("标题和内容不能为空！");
+        return;
+      }
+
+      const newKey = database.ref("notes").push().key;
+      database.ref("notes/" + newKey).set({ title, content })
+        .then(() => {
+          alert("笔记添加成功！");
+          loadNotes(); // 刷新笔记列表
+          document.getElementById("note-title").value = ""; // 清空输入框
+          document.getElementById("note-content").value = ""; // 清空内容框
+        })
+        .catch((error) => {
+          console.error("添加笔记失败：", error);
+        });
+    };
+
+    // 删除笔记
+    const deleteNote = (key) => {
+      if (confirm("确定要删除该笔记吗？")) {
+        database.ref("notes/" + key).remove()
+          .then(() => {
+            alert("笔记删除成功！");
+            loadNotes(); // 刷新笔记列表
+          })
+          .catch((error) => {
+            console.error("删除笔记失败：", error);
+          });
+      }
+    };
+
+    // 页面加载时调用
+    window.onload = loadNotes;
+  </script>
+</body>
+</html>
