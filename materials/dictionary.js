@@ -51,5 +51,5 @@ const kanaToRomaji = {
     "ビャ": "bya", "ビュ": "byu", "ビョ": "byo",
     "ぴゃ": "pya", "ぴゅ": "pyu", "ぴょ": "pyo",
     "ピャ": "pya", "ピュ": "pyu", "ピョ": "pyo"
-  };
+};
   
