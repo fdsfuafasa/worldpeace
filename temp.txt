@@ -1,67 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>日语假名记忆强化</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 20px;
-    }
+const firebaseConfig = {
+    apiKey: "AIzaSyC0aCh6FQ2so1JyoFG_RHiMPlFDK4Jz_ZE",
+    authDomain: "japanesestudytracker.firebaseapp.com",
+    databaseURL: "https://japanesestudytracker-default-rtdb.firebaseio.com",
+    projectId: "japanesestudytracker",
+    storageBucket: "japanesestudytracker.firebasestorage.app",
+    messagingSenderId: "646825226387",
+    appId: "1:646825226387:web:f3fa4802ea63eeca6cdd66"
+};
 
-    table {
-      margin: 20px auto;
-      border-collapse: collapse;
-      width: 60%;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-
-    button {
-      padding: 5px 10px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    #btn-container {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-  </style>
-</head>
-<body>
-  <h1>日语假名记忆强化</h1>
-
-  <!-- 假名表格 -->
-  <table id="kana-table">
-    <thead>
-      <tr>
-        <th>假名</th>
-        <th>操作</th>
-        <th>罗马音</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td colspan="3">点击按钮生成假名</td></tr>
-    </tbody>
-  </table>
-
-  <!-- 按钮容器 -->
-  <div id="btn-container">
-    <!-- 重新生成按钮 -->
-    <button onclick="generateKana()">生成假名</button>
-    <!-- 返回主页按钮 -->
-    <button onclick="goToHome()">返回主页</button>
-  </div>
-
-  <script>
+<script>
     // 日语假名与罗马音对应表
     const kanaToRomaji = {
       "あ": "a", "い": "i", "う": "u", "え": "e", "お": "o",
@@ -116,48 +63,3 @@
       "ぴゃ": "pya", "ぴゅ": "pyu", "ぴょ": "pyo",
       "ピャ": "pya", "ピュ": "pyu", "ピョ": "pyo"
     };
-
-    // 返回主页
-    const goToHome = () => {
-      window.location.href = "../index.html"; // 修改为你的主页文件路径
-    };
-
-    // 随机生成X个假名并填充表格
-    const generateKana = (x = 10) => {
-      const shuffledKana = Object.keys(kanaToRomaji).sort(() => 0.5 - Math.random()); // 随机排序
-      const selectedKana = shuffledKana.slice(0, x); // 选取前X个假名
-
-      const tableBody = document.getElementById("kana-table").querySelector("tbody");
-      tableBody.innerHTML = ""; // 清空表格内容
-
-      selectedKana.forEach((kana) => {
-        const row = document.createElement("tr");
-
-        // 假名单元格
-        const kanaCell = document.createElement("td");
-        kanaCell.textContent = kana;
-
-        // 按钮单元格
-        const buttonCell = document.createElement("td");
-        const button = document.createElement("button");
-        button.textContent = "查看罗马音";
-        button.onclick = () => {
-          // 显示罗马音
-          romajiCell.textContent = kanaToRomaji[kana] || "未知";
-          button.disabled = true; // 禁用按钮防止重复点击
-        };
-        buttonCell.appendChild(button);
-
-        // 罗马音单元格
-        const romajiCell = document.createElement("td");
-        romajiCell.textContent = ""; // 初始为空
-
-        row.appendChild(kanaCell);
-        row.appendChild(buttonCell);
-        row.appendChild(romajiCell);
-        tableBody.appendChild(row);
-      });
-    };
-  </script>
-</body>
-</html>
