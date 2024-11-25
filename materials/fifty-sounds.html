@@ -50,12 +50,6 @@
             color: white;
             text-decoration: none;
         }
-        section {
-            margin-bottom: 40px;
-        }
-        h2 {
-            color: #4CAF50;
-        }
     </style>
 </head>
 <body>
@@ -63,79 +57,109 @@
         <h1>五十音图</h1>
     </header>
     <main>
-        <section id="seion">
-            <h2>清音</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>-</th>
-                        <th>a</th>
-                        <th>i</th>
-                        <th>u</th>
-                        <th>e</th>
-                        <th>o</th>
-                    </tr>
-                </thead>
-                <tbody id="seion-body">
-                </tbody>
-            </table>
-        </section>
-        <section id="dakuon">
-            <h2>浊音</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>-</th>
-                        <th>a</th>
-                        <th>i</th>
-                        <th>u</th>
-                        <th>e</th>
-                        <th>o</th>
-                    </tr>
-                </thead>
-                <tbody id="dakuon-body">
-                </tbody>
-            </table>
-        </section>
-        <section id="youon">
-            <h2>拗音</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>-</th>
-                        <th>ya</th>
-                        <th>yu</th>
-                        <th>yo</th>
-                    </tr>
-                </thead>
-                <tbody id="youon-body">
-                </tbody>
-            </table>
-        </section>
+        <table>
+            <thead>
+                <tr>
+                    <th>-</th>
+                    <th>a</th>
+                    <th>i</th>
+                    <th>u</th>
+                    <th>e</th>
+                    <th>o</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>-</th>
+                    <td>あ<br>ア</td>
+                    <td>い<br>イ</td>
+                    <td>う<br>ウ</td>
+                    <td>え<br>エ</td>
+                    <td>お<br>オ</td>
+                </tr>
+                <tr>
+                    <th>k</th>
+                    <td>か<br>カ</td>
+                    <td>き<br>キ</td>
+                    <td>く<br>ク</td>
+                    <td>け<br>ケ</td>
+                    <td>こ<br>コ</td>
+                </tr>
+                <tr>
+                    <th>s</th>
+                    <td>さ<br>サ</td>
+                    <td>し<br>シ</td>
+                    <td>す<br>ス</td>
+                    <td>せ<br>セ</td>
+                    <td>そ<br>ソ</td>
+                </tr>
+                <tr>
+                    <th>t</th>
+                    <td>た<br>タ</td>
+                    <td>ち<br>チ</td>
+                    <td>つ<br>ツ</td>
+                    <td>て<br>テ</td>
+                    <td>と<br>ト</td>
+                </tr>
+                <tr>
+                    <th>n</th>
+                    <td>な<br>ナ</td>
+                    <td>に<br>ニ</td>
+                    <td>ぬ<br>ヌ</td>
+                    <td>ね<br>ネ</td>
+                    <td>の<br>ノ</td>
+                </tr>
+                <tr>
+                    <th>h</th>
+                    <td>は<br>ハ</td>
+                    <td>ひ<br>ヒ</td>
+                    <td>ふ<br>フ</td>
+                    <td>へ<br>ヘ</td>
+                    <td>ほ<br>ホ</td>
+                </tr>
+                <tr>
+                    <th>m</th>
+                    <td>ま<br>マ</td>
+                    <td>み<br>ミ</td>
+                    <td>む<br>ム</td>
+                    <td>め<br>メ</td>
+                    <td>も<br>モ</td>
+                </tr>
+                <tr>
+                    <th>y</th>
+                    <td>や<br>ヤ</td>
+                    <td></td>
+                    <td>ゆ<br>ユ</td>
+                    <td></td>
+                    <td>よ<br>ヨ</td>
+                </tr>
+                <tr>
+                    <th>r</th>
+                    <td>ら<br>ラ</td>
+                    <td>り<br>リ</td>
+                    <td>る<br>ル</td>
+                    <td>れ<br>レ</td>
+                    <td>ろ<br>ロ</td>
+                </tr>
+                <tr>
+                    <th>w</th>
+                    <td>わ<br>ワ</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>を<br>ヲ</td>
+                </tr>
+                <tr>
+                    <th>-</th>
+                    <td>ん<br>ン</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
         <button><a href="../index.html">返回主页</a></button>
     </main>
-    <script src="dictionary.js"></script>
-    <script>
-        // 从 dictionary.js 动态加载假名数据
-        function loadTable(id, data) {
-            const tableBody = document.getElementById(id);
-            data.forEach(row => {
-                const tr = document.createElement("tr");
-                row.forEach(cell => {
-                    const td = document.createElement("td");
-                    td.innerHTML = cell || ""; // 显示空白单元格
-                    tr.appendChild(td);
-                });
-                tableBody.appendChild(tr);
-            });
-        }
-
-        // 清音、浊音、拗音加载到对应的表格中
-        document.addEventListener("DOMContentLoaded", () => {
-            loadTable("seion-body", dictionary.seion);
-            loadTable("dakuon-body", dictionary.dakuon);
-            loadTable("youon-body", dictionary.youon);
-        });
-    </script>
 </body>
 </html>
