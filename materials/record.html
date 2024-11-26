@@ -32,6 +32,8 @@
     <input type="text" id="chinese-word" placeholder="输入中文">
     <label for="japanese-word">日文：</label>
     <input type="text" id="japanese-word" placeholder="输入日文">
+    <label for="remark">备注：</label>
+    <input type="text" id="remark" placeholder="输入备注（可选）">
     <button onclick="addWord()">添加单词</button>
   </div>
 
@@ -44,6 +46,7 @@
       <tr>
         <th>中文</th>
         <th>日文</th>
+        <th>备注</th>
         <th>操作</th>
       </tr>
     </thead>
@@ -106,6 +109,11 @@
             tdJapanese.textContent = word.japanese || "N/A";
             tr.appendChild(tdJapanese);
 
+            // 创建备注列
+            const tdRemark = document.createElement("td");
+            tdRemark.textContent = word.remark || "无备注";
+            tr.appendChild(tdRemark);
+
             // 创建操作列
             const tdActions = document.createElement("td");
             const deleteButton = document.createElement("button");
@@ -118,7 +126,7 @@
             wordTableBody.appendChild(tr);
           });
         } else {
-          wordTableBody.innerHTML = "<tr><td colspan='3'>没有记录的单词。</td></tr>";
+          wordTableBody.innerHTML = "<tr><td colspan='4'>没有记录的单词。</td></tr>";
         }
 
         // 隐藏加载中的消息
@@ -133,13 +141,15 @@
     const addWord = () => {
       const chineseWord = document.getElementById("chinese-word").value.trim();
       const japaneseWord = document.getElementById("japanese-word").value.trim();
+      const remark = document.getElementById("remark").value.trim();
+      
       if (!chineseWord || !japaneseWord) {
         alert("请输入中文和日文！");
         return;
       }
 
       const newKey = database.ref("words").push().key;
-      const newWord = { chinese: chineseWord, japanese: japaneseWord };
+      const newWord = { chinese: chineseWord, japanese: japaneseWord, remark: remark };
 
       database.ref("words/" + newKey).set(newWord)
         .then(() => {
@@ -147,6 +157,7 @@
           loadWords(); // 刷新单词列表
           document.getElementById("chinese-word").value = ""; // 清空输入框
           document.getElementById("japanese-word").value = "";
+          document.getElementById("remark").value = "";
         })
         .catch((error) => {
           console.error("添加单词失败：", error);
