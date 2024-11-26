@@ -84,7 +84,7 @@
     const loadWords = () => {
       const wordTableBody = document.getElementById("word-table-body");
       const loadingMessage = document.getElementById("loading-message");
-      
+
       // 显示加载中的消息
       loadingMessage.style.display = "block";
 
@@ -99,27 +99,58 @@
             // 创建表格行
             const tr = document.createElement("tr");
 
-            // 创建中文列
+            // 中文列
             const tdChinese = document.createElement("td");
             tdChinese.textContent = word.chinese || "N/A";
+            tdChinese.id = `chinese-${key}`;
+            tdChinese.setAttribute("contentEditable", false);
             tr.appendChild(tdChinese);
 
-            // 创建日文列
+            // 日文列
             const tdJapanese = document.createElement("td");
             tdJapanese.textContent = word.japanese || "N/A";
+            tdJapanese.id = `japanese-${key}`;
+            tdJapanese.setAttribute("contentEditable", false);
             tr.appendChild(tdJapanese);
 
-            // 创建备注列
+            // 备注列
             const tdRemark = document.createElement("td");
             tdRemark.textContent = word.remark || "无备注";
+            tdRemark.id = `remark-${key}`;
+            tdRemark.setAttribute("contentEditable", false);
             tr.appendChild(tdRemark);
 
-            // 创建操作列
+            // 操作列 - 下拉列表
             const tdActions = document.createElement("td");
-            const deleteButton = document.createElement("button");
-            deleteButton.textContent = "删除";
-            deleteButton.onclick = () => deleteWord(key);
-            tdActions.appendChild(deleteButton);
+            const select = document.createElement("select");
+            select.onchange = (event) => handleActionChange(event, key);
+
+            const defaultOption = document.createElement("option");
+            defaultOption.textContent = "选择操作";
+            defaultOption.value = "";
+            select.appendChild(defaultOption);
+
+            const editChineseOption = document.createElement("option");
+            editChineseOption.textContent = "修改中文";
+            editChineseOption.value = "edit-chinese";
+            select.appendChild(editChineseOption);
+
+            const editJapaneseOption = document.createElement("option");
+            editJapaneseOption.textContent = "修改日文";
+            editJapaneseOption.value = "edit-japanese";
+            select.appendChild(editJapaneseOption);
+
+            const editRemarkOption = document.createElement("option");
+            editRemarkOption.textContent = "修改备注";
+            editRemarkOption.value = "edit-remark";
+            select.appendChild(editRemarkOption);
+
+            const deleteOption = document.createElement("option");
+            deleteOption.textContent = "删除";
+            deleteOption.value = "delete";
+            select.appendChild(deleteOption);
+
+            tdActions.appendChild(select);
             tr.appendChild(tdActions);
 
             // 添加行到表格
@@ -135,6 +166,49 @@
         console.error("读取单词失败：", error);
         loadingMessage.style.display = "none"; // 如果出现错误，也隐藏加载中的消息
       });
+    };
+
+    // 处理下拉菜单选择
+    const handleActionChange = (event, key) => {
+      const action = event.target.value;
+
+      switch (action) {
+        case "edit-chinese":
+          toggleEdit(document.querySelector(`#chinese-${key}`), key, "chinese");
+          break;
+        case "edit-japanese":
+          toggleEdit(document.querySelector(`#japanese-${key}`), key, "japanese");
+          break;
+        case "edit-remark":
+          toggleEdit(document.querySelector(`#remark-${key}`), key, "remark");
+          break;
+        case "delete":
+          deleteWord(key);
+          break;
+        default:
+          break;
+      }
+
+      // 重置下拉菜单
+      event.target.value = "";
+    };
+
+    // 编辑状态切换逻辑
+    const toggleEdit = (td, key, field) => {
+      const isEditing = td.getAttribute("contentEditable") === "true";
+      if (isEditing) {
+        // 结束编辑，保存数据
+        td.setAttribute("contentEditable", false);
+
+        const newValue = td.textContent.trim();
+        database.ref(`words/${key}/${field}`).set(newValue)
+          .then(() => alert(`${field} 更新成功！`))
+          .catch((error) => console.error(`更新 ${field} 失败：`, error));
+      } else {
+        // 开始编辑
+        td.setAttribute("contentEditable", true);
+        td.focus();
+      }
     };
 
     // 添加单词
@@ -172,14 +246,12 @@
             alert("单词删除成功！");
             loadWords(); // 刷新单词列表
           })
-          .catch((error) => {
-            console.error("删除单词失败：", error);
-          });
+          .catch((error) => console.error("删除单词失败：", error));
       }
     };
 
-    // 页面加载时调用
-    window.onload = loadWords;
+    // 初始化加载单词
+    loadWords();
   </script>
 </body>
 </html>
