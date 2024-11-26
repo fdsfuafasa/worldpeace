@@ -4,6 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>日语单词记录</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
 </head>
 <body>
   <h1>日语单词记录</h1>
@@ -11,8 +28,10 @@
   <button onclick="goToHome()">返回目录主页</button>
   
   <div>
-    <label for="new-word">添加新单词：</label>
-    <input type="text" id="new-word" placeholder="输入单词">
+    <label for="chinese-word">中文：</label>
+    <input type="text" id="chinese-word" placeholder="输入中文">
+    <label for="japanese-word">日文：</label>
+    <input type="text" id="japanese-word" placeholder="输入日文">
     <button onclick="addWord()">添加单词</button>
   </div>
 
@@ -20,7 +39,18 @@
   <div id="loading-message" style="display: none;">单词正在加载中...</div>
 
   <h2>单词列表：</h2>
-  <ul id="word-list"></ul>
+  <table>
+    <thead>
+      <tr>
+        <th>中文</th>
+        <th>日文</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="word-table-body">
+      <!-- 单词记录将在这里动态插入 -->
+    </tbody>
+  </table>
 
   <!-- Firebase 兼容模式脚本 -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -29,13 +59,13 @@
   <script>
     // Firebase 配置（替换为你的配置）
     const firebaseConfig = {
-        apiKey: "AIzaSyC0aCh6FQ2so1JyoFG_RHiMPlFDK4Jz_ZE",
-        authDomain: "japanesestudytracker.firebaseapp.com",
-        databaseURL: "https://japanesestudytracker-default-rtdb.firebaseio.com",
-        projectId: "japanesestudytracker",
-        storageBucket: "japanesestudytracker.firebasestorage.app",
-        messagingSenderId: "646825226387",
-        appId: "1:646825226387:web:f3fa4802ea63eeca6cdd66"
+      apiKey: "AIzaSyC0aCh6FQ2so1JyoFG_RHiMPlFDK4Jz_ZE",
+      authDomain: "japanesestudytracker.firebaseapp.com",
+      databaseURL: "https://japanesestudytracker-default-rtdb.firebaseio.com",
+      projectId: "japanesestudytracker",
+      storageBucket: "japanesestudytracker.firebasestorage.app",
+      messagingSenderId: "646825226387",
+      appId: "1:646825226387:web:f3fa4802ea63eeca6cdd66"
     };
 
     // 初始化 Firebase
@@ -49,13 +79,13 @@
 
     // 加载单词列表
     const loadWords = () => {
-      const wordList = document.getElementById("word-list");
+      const wordTableBody = document.getElementById("word-table-body");
       const loadingMessage = document.getElementById("loading-message");
       
       // 显示加载中的消息
       loadingMessage.style.display = "block";
 
-      wordList.innerHTML = ""; // 清空列表
+      wordTableBody.innerHTML = ""; // 清空表格内容
 
       database.ref("words").once("value", (snapshot) => {
         const words = snapshot.val();
@@ -63,21 +93,32 @@
           Object.keys(words).forEach((key) => {
             const word = words[key];
 
-            // 创建列表项
-            const li = document.createElement("li");
-            li.textContent = word;
+            // 创建表格行
+            const tr = document.createElement("tr");
 
-            // 创建删除按钮
+            // 创建中文列
+            const tdChinese = document.createElement("td");
+            tdChinese.textContent = word.chinese || "N/A";
+            tr.appendChild(tdChinese);
+
+            // 创建日文列
+            const tdJapanese = document.createElement("td");
+            tdJapanese.textContent = word.japanese || "N/A";
+            tr.appendChild(tdJapanese);
+
+            // 创建操作列
+            const tdActions = document.createElement("td");
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "删除";
-            deleteButton.style.marginLeft = "10px";
             deleteButton.onclick = () => deleteWord(key);
+            tdActions.appendChild(deleteButton);
+            tr.appendChild(tdActions);
 
-            li.appendChild(deleteButton); // 添加删除按钮到列表项
-            wordList.appendChild(li);
+            // 添加行到表格
+            wordTableBody.appendChild(tr);
           });
         } else {
-          wordList.innerHTML = "<li>没有记录的单词。</li>";
+          wordTableBody.innerHTML = "<tr><td colspan='3'>没有记录的单词。</td></tr>";
         }
 
         // 隐藏加载中的消息
@@ -90,18 +131,22 @@
 
     // 添加单词
     const addWord = () => {
-      const newWord = document.getElementById("new-word").value.trim();
-      if (!newWord) {
-        alert("请输入单词！");
+      const chineseWord = document.getElementById("chinese-word").value.trim();
+      const japaneseWord = document.getElementById("japanese-word").value.trim();
+      if (!chineseWord || !japaneseWord) {
+        alert("请输入中文和日文！");
         return;
       }
 
       const newKey = database.ref("words").push().key;
+      const newWord = { chinese: chineseWord, japanese: japaneseWord };
+
       database.ref("words/" + newKey).set(newWord)
         .then(() => {
           alert("单词添加成功！");
           loadWords(); // 刷新单词列表
-          document.getElementById("new-word").value = ""; // 清空输入框
+          document.getElementById("chinese-word").value = ""; // 清空输入框
+          document.getElementById("japanese-word").value = "";
         })
         .catch((error) => {
           console.error("添加单词失败：", error);
