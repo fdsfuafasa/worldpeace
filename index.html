@@ -50,6 +50,18 @@
     </style>
 </head>
 <body>
+    <h1>欢迎来到主页</h1>
+    <p>这里是需要登录才能访问的内容。</p>
+  
+    <script>
+      // 检查用户是否已经登录
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+  
+      // 如果没有登录，跳转到登录页面
+      if (!isLoggedIn) {
+        window.location.href = "login.html";  // 跳转到登录页面
+      }
+    </script>
     <header>
         <h1>日语学习资料</h1>
     </header>
