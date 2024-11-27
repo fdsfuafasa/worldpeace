@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="../auth.js"></script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>日语笔记</title>
 </head>
 <body>
+  <script>
+    // 页面加载时检查登录状态
+    window.onload = checkLogin;
+  </script>
   <h1>我的日语笔记</h1>
   <!-- 返回主页按钮 -->
   <button onclick="goToHome()">返回主页</button>
