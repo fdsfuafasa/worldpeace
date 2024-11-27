@@ -17,12 +17,13 @@
   <button onclick="login()">登录</button>
 
   <script>
-    // 在本地存储的账号密码，实际应用中应该用加密方式存储
+    // 模拟的用户数据
     const users = {
-      "cjj": "cjj",  // 存储账号和密码
+      "cjj": "cjj",  
       "cjj": "cjj"
     };
 
+    // 登录函数
     const login = () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -36,6 +37,9 @@
 
       // 校验密码
       if (storedPassword === password) {
+        // 登录成功，设置登录状态
+        localStorage.setItem("isLoggedIn", "true");  // 存储登录状态
+
         alert("登录成功！");
         window.location.href = "home.html";  // 登录成功后跳转到主页
       } else {
