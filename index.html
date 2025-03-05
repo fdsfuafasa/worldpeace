@@ -1,13 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>欢迎来到我的网站</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日语学习门户</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            transition: transform 0.3s ease;
+        }
+
+        h1 {
+            color: #2d3a2d;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .login-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .login-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-btn::before {
+            content: "✏️";
+            font-size: 1.2rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>欢迎来到我的日语学习网站</h1>
-  <p>在此网站上，您可以记录和学习日语单词。</p>
-  <p><a href="login.html">点击登录</a></p>
+    <div class="hero-container">
+        <h1>开启日语学习之旅</h1>
+        <p>在这里您可以系统学习五十音图、记录学习进度、管理日语笔记，并通过互动练习巩固知识。</p>
+        <a href="login.html" class="login-btn">立即开始学习</a>
+    </div>
 </body>
 </html>
